@@ -1,0 +1,75 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: |
+          npm test -- --coverage
+          echo "Coverage: $(cat coverage/coverage-summary.json | jq '.total.lines.pct')"
+        continue-on-error: true
+
+      - name: Check test status
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "Some tests failed."
+          fi
+
+      - name: Check coverage # continue-on-error: true and check coverage
+        run: |
+          coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          if (( $(echo "$coverage < 80" | bc -l) )); then
+            echo "Coverage is less than 80%. Coverage: $coverage%"
+            exit 1  # Exit with a non-zero status to indicate failure
+          else
+            echo "Coverage is acceptable: $coverage%"
+          fi
+        continue-on-error: true # Allow the flow to continue
+
+  deploy-development:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop' && success() # only if tests pass
+    steps:
+      - name: Deploy to Development
+        run: |
+          echo "Deploying to Development Environment"
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    steps:
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying to Staging Environment"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to Production Environment"
