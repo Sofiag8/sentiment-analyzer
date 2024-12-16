@@ -11,15 +11,6 @@ export class TextAnalizer extends Document {
 
   @Prop()
   magnitude: number;
-
-  @Prop()
-  sentiment: string;
-
-  @Prop()
-  createdAt: Date;
-
-  @Prop()
-  updatedAt: Date;
 }
 
 export const TextAnalizerSchema = SchemaFactory.createForClass(TextAnalizer);
