@@ -1,8 +1,4 @@
-export interface TextAnalizer {
-  text: string;
+export interface TextAnalizerResponse {
   score: number;
   magnitude: number;
-  sentiment: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
