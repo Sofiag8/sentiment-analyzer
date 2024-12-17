@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
@@ -36,7 +36,7 @@ jobs:
             echo "Some tests failed."
           fi
 
-      - name: Check coverage # continue-on-error: true and check coverage
+      - name: Check coverage
         run: |
           coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
           if (( $(echo "$coverage < 80" | bc -l) )); then
@@ -45,7 +45,7 @@ jobs:
           else
             echo "Coverage is acceptable: $coverage%"
           fi
-        continue-on-error: true # Allow the flow to continue
+        # continue-on-error: true # Allow the flow to continue
 
   deploy-development:
     runs-on: ubuntu-latest
