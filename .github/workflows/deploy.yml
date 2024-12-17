@@ -38,7 +38,7 @@ jobs:
 
       - name: Check coverage
         run: |
-          coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          coverage=$(cat coverage/coverage-final.json | jq '.total.lines.pct')
           if (( $(echo "$coverage < 80" | bc -l) )); then
             echo "Coverage is less than 80%. Coverage: $coverage%"
             exit 1  # Exit with a non-zero status to indicate failure
