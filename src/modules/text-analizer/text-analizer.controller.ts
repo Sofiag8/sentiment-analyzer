@@ -5,7 +5,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TextAnalizerResponse } from './interfaces/text-analizer.interface';
 
 @ApiTags('text-analizer')
-@Controller('text')
+@Controller('analyze-text')
 export class TextAnalizerController {
   constructor(private readonly sentimentService: TextAnalizerService) {}
 
