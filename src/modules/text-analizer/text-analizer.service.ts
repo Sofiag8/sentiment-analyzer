@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TextAnalizerResponse } from './interfaces/text-analizer.interface';
 import { TextAnalizer } from './entities/text-analizer.entity';
+import { LoggerService } from '../../shared/logger/logger.service';
 
 @Injectable()
 export class TextAnalizerService {
@@ -12,6 +13,7 @@ export class TextAnalizerService {
   constructor(
     @InjectModel(TextAnalizer.name)
     private textAnalizerModel: Model<TextAnalizer>,
+    private readonly logger: LoggerService,
   ) {}
 
   async analyzeSentiment(text: string): Promise<TextAnalizerResponse> {
@@ -27,14 +29,14 @@ export class TextAnalizerService {
       });
       const savedSentiment = await sentimentData.save();
 
-      console.log('Sentiment analysis successful:', savedSentiment);
+      this.logger.log('Sentiment analysis successful:', savedSentiment);
 
       return {
         score: savedSentiment.score,
         magnitude: savedSentiment.magnitude,
       };
     } catch (error) {
-      console.error('Error analyzing sentiment:', error);
+      this.logger.error('Error analyzing sentiment:', error);
       throw new Error('Failed to analyze sentiment');
     }
   }

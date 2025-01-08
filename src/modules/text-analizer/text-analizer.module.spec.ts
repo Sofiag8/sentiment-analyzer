@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TextAnalizerController } from './text-analizer.controller';
 import { TextAnalizerService } from './text-analizer.service';
 import { getModelToken } from '@nestjs/mongoose';
+import { LoggerService } from '../../shared/logger/logger.service';
 
 describe('TextAnalizerModule', () => {
   let controller: TextAnalizerController;
@@ -18,6 +19,7 @@ describe('TextAnalizerModule', () => {
       controllers: [TextAnalizerController],
       providers: [
         TextAnalizerService,
+        LoggerService,
         {
           provide: getModelToken('TextAnalizer'),
           useValue: mockTextAnalizerModel,

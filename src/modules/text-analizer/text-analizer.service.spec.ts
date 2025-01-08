@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { TextAnalizerService } from './text-analizer.service';
 import { TextAnalizer } from './entities/text-analizer.entity';
+import { LoggerService } from '../../shared/logger/logger.service';
 
 jest.mock('@google-cloud/language');
 
@@ -12,6 +13,7 @@ describe('TextAnalizerService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TextAnalizerService,
+        LoggerService,
         {
           provide: getModelToken(TextAnalizer.name),
           useValue: {
